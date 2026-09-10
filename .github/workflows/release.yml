@@ -74,8 +74,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       BACKEND: ${{ matrix.backend }}
-      # mozilla/sccache#2722 and #2811: CUDA 13.3 parsing and Windows quoting fixes.
-      SCCACHE_REV: ffac4a596aa50da3540520eb307b7a591984a064
+      # mozilla/sccache#2809 merge snapshot also includes #2722 and #2811.
+      SCCACHE_REV: a91b5c1c5566c1d5abd9a2a662cf37fde07236cb
       SCCACHE_GHA_ENABLED: 'true'
       SCCACHE_IGNORE_SERVER_IO_ERROR: '1'
       TARGET_TRIPLE: ${{ matrix.target }}
