@@ -95,11 +95,11 @@ jobs:
           path: upstream/stable-diffusion.cpp
           submodules: true
 
-      - name: Install CUDA 13.0
+      - name: Install CUDA 13.3
         if: matrix.backend == 'cuda'
         uses: Jimver/cuda-toolkit@master
         with:
-          cuda: '13.0.0'
+          cuda: '13.3.1'
           method: network
           log-file-suffix: ${{ matrix.target }}
           sub-packages: >-
