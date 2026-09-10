@@ -74,6 +74,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       BACKEND: ${{ matrix.backend }}
+      # mozilla/sccache#2722 and #2811: CUDA 13.3 parsing and Windows quoting fixes.
+      SCCACHE_REV: ffac4a596aa50da3540520eb307b7a591984a064
       SCCACHE_GHA_ENABLED: 'true'
       SCCACHE_IGNORE_SERVER_IO_ERROR: '1'
       TARGET_TRIPLE: ${{ matrix.target }}
@@ -81,11 +83,31 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up sccache
-        uses: mozilla-actions/sccache-action@v0.0.11
+      - name: Cache sccache
+        id: sccache
+        uses: actions/cache@v6
         with:
-          version: v0.16.0
-          disable_annotations: true
+          path: ${{ runner.temp }}/sccache
+          key: sccache-${{ runner.os }}-${{ runner.arch }}-${{ env.SCCACHE_REV }}-gha
+
+      - name: Build sccache
+        if: steps.sccache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          cargo install --locked \
+            --git https://github.com/mozilla/sccache \
+            --rev "$SCCACHE_REV" \
+            --no-default-features --features gha \
+            --root "$RUNNER_TEMP/sccache" sccache
+
+      - name: Configure sccache
+        uses: actions/github-script@v9
+        with:
+          script: |
+            core.addPath(`${process.env.RUNNER_TEMP}/sccache/bin`);
+            core.exportVariable('ACTIONS_CACHE_SERVICE_V2', 'on');
+            core.exportVariable('ACTIONS_RESULTS_URL', process.env.ACTIONS_RESULTS_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - name: Check out stable-diffusion.cpp
         uses: actions/checkout@v7
