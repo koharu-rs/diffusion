@@ -7,3 +7,10 @@ The release workflow resolves the latest stable upstream release and builds CUDA
 Build jobs use the standard `ubuntu-latest`, `windows-latest`, and `macos-latest` GitHub-hosted runners.
 
 Generated binaries are published through this repository's [releases](https://github.com/koharu-org/diffusion/releases).
+
+## License
+
+This repository is dual-licensed under the [MIT License](LICENSE-MIT) or the
+[Apache License, Version 2.0](LICENSE-APACHE), at your option.
+
+Third-party code and dependencies retain their respective licenses.
