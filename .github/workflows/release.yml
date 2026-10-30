@@ -115,8 +115,8 @@ jobs:
           repository: leejet/stable-diffusion.cpp
           ref: ${{ needs.source.outputs.tag }}
           path: upstream/stable-diffusion.cpp
-          # ggml's CUDA build needs CUTLASS, a submodule of the ggml submodule.
-          submodules: ${{ matrix.backend == 'cuda' && 'recursive' || 'true' }}
+          # ggml vendors CUTLASS as a submodule of its own.
+          submodules: recursive
 
       - name: Install CUDA 13.3
         if: matrix.backend == 'cuda'
